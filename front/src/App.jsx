@@ -1,25 +1,23 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'; // Axios 라이브러리를 import 합니다.
 import './App.css';
 
 function App() {
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    axios.get('/api/hello')
+      .then((res) => {
+        setMessage(res.data);
+      })
+      .catch((e) => console.error("There was an error!", e));
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src="Octocat.png" className="App-logo" alt="logo" />
         <p>
-          GitHub Codespaces <span className="heart">♥️</span> React
-        </p>
-        <p className="small">
-          Edit <code>src/App.jsx</code> and save to reload.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          Message from Spring Boot: {message}
         </p>
       </header>
     </div>
