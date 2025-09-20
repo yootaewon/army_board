@@ -1,26 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Axios 라이브러리를 import 합니다.
-import './App.css';
+import React from "react";
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import Header from "./components/Header";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    axios.get('/api/hello')
-      .then((res) => {
-        setMessage(res.data);
-      })
-      .catch((e) => console.error("There was an error!", e));
-  }, []);
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Message from Spring Boot: {message}
-        </p>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Header />
+      <div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signIn" element={<SignIn />} />
+          <Route path="/signUp" element={<SignUp />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
