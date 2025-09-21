@@ -1,7 +1,6 @@
 package com.army.back.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-
 import com.army.back.model.User;
 
 @Mapper

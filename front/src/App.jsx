@@ -11,13 +11,11 @@ function App() {
   return (
     <BrowserRouter>
       <Header />
-      <div>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/signUp" element={<SignUp />} />
         </Routes>
-      </div>
     </BrowserRouter>
   );
 }
