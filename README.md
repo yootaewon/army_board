@@ -29,12 +29,12 @@
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     army_number VARCHAR(20) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    phoneNumber VARCHAR(50),
+    name VARCHAR(50),
+    dept VARCHAR(100),
+    phone_number VARCHAR(50),
     army_type VARCHAR(50),
     enlistment_date DATE,
     discharge_date DATE,
-    UNIQUE(army_number),
-    UNIQUE(email)
+    UNIQUE(army_number)
 );

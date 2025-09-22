@@ -24,7 +24,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())  // CSRF 비활성화 (JWT 사용 시 필요)
                 .httpBasic(basic -> basic.disable())  // httpBasic 비활성화 (JWT 사용 시 필요)
                 .authorizeHttpRequests((authorize) -> authorize
-                                .requestMatchers("/signUp", "/signIn").permitAll()  // 회원가입, 로그인 등은 누구나 접근 가능
+                                .requestMatchers("/api/signUp", "/api/signIn").permitAll()  // 회원가입, 로그인 등은 누구나 접근 가능
                                 .anyRequest().authenticated()  // 그 외 모든 요청은 인증 필요
                 )
                 .logout(logout -> logout

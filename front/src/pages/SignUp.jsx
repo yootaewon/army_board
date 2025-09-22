@@ -1,32 +1,49 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
   const navigate = useNavigate();
 
-  const [armyType, setArmyTpye] = useState("army");
-  const [armyNumber, setArmyNumber] = useState();
-  const [enlistmentDate, setEnlistmentDate] = useState();
-  const [password, setPassword] = useState();
-  const [passwordCheck, setPasswordCheck] = useState();
-  const [mail, setMail] = useState();
-  const [phoneNumber, setPhoneNumber] = useState();
+  const [armyType, setArmyType] = useState("army");
+  const [armyNumber, setArmyNumber] = useState("");
+  const [enlistmentDate, setEnlistmentDate] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [name, setName] = useState();
+  const [dept, setDept] = useState();
   const [formErrors, setFormErrors] = useState({});
 
-  const handleSubmit = (e) => {
-    errorFilter();
+  const handleSubmit = () => {
+    const errors = errorFilter();
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    setFormErrors({});
+
     axios
-      .post("/signUp", {
+      .post("/api/signUp", {
         armyType,
         armyNumber,
         enlistmentDate,
         password,
-        mail,
+        email,
         phoneNumber,
+        name,
+        dept,
       })
-      .then((res) => {
-        console.log("회원가입 성공");
+      .then(() => {
+        toast("회원가입 성공");
+      })
+      .catch((err) => {
+        toast(err.response.data);
       });
   };
 
@@ -39,13 +56,10 @@ const SignUp = () => {
     if (password !== passwordCheck) {
       errors.passwordCheck = "비밀번호가 일치하지 않습니다.";
     }
+    if (!dept) errors.dept = "군 소속을 입력해주세요.";
+    if (!name) errors.name = "이름을 입력해주세요.";
 
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      return;
-    }
-
-    setFormErrors({});
+    return errors;
   };
 
   const goToSignIn = () => {
@@ -55,6 +69,7 @@ const SignUp = () => {
   return (
     <>
       <section className="vh-100 gradient-custom">
+        <ToastContainer />
         <div className="container py-5 h-100">
           <div className="row justify-content-center align-items-center h-100">
             <div className="col-12 col-lg-9 col-xl-7">
@@ -74,7 +89,7 @@ const SignUp = () => {
                             type="radio"
                             value="army"
                             checked={armyType === "army"}
-                            onChange={(e) => setArmyTpye(e.target.value)}
+                            onChange={(e) => setArmyType(e.target.value)}
                           />
                           <label className="form-check-label">육군</label>
                         </div>
@@ -85,7 +100,7 @@ const SignUp = () => {
                             type="radio"
                             value="navy"
                             checked={armyType === "navy"}
-                            onChange={(e) => setArmyTpye(e.target.value)}
+                            onChange={(e) => setArmyType(e.target.value)}
                           />
                           <label className="form-check-label">해군</label>
                         </div>
@@ -96,7 +111,7 @@ const SignUp = () => {
                             type="radio"
                             value="airForce"
                             checked={armyType === "airForce"}
-                            onChange={(e) => setArmyTpye(e.target.value)}
+                            onChange={(e) => setArmyType(e.target.value)}
                           />
                           <label className="form-check-label">공군</label>
                         </div>
@@ -107,7 +122,7 @@ const SignUp = () => {
                             type="radio"
                             value="marine"
                             checked={armyType === "marine"}
-                            onChange={(e) => setArmyTpye(e.target.value)}
+                            onChange={(e) => setArmyType(e.target.value)}
                           />
                           <label className="form-check-label">해병대</label>
                         </div>
@@ -116,38 +131,33 @@ const SignUp = () => {
 
                     <div className="row">
                       <div className="col-md-6 mb-4">
-                        <div data-mdb-input-init className="form-outline">
+                        <div className="form-outline">
                           <input
                             type="text"
                             className="form-control form-control-lg"
+                            value={armyNumber}
                             onChange={(e) => setArmyNumber(e.target.value)}
                           />
-                          <label className="form-label" htmlFor="armyNumber">
-                            *군 번
-                          </label>
+                          <label className="form-label">*군 번</label>
                         </div>
                         {formErrors.armyNumber && (
-                          <div className="alert alert-danger" role="alert">
+                          <div className="alert alert-danger">
                             {formErrors.armyNumber}
                           </div>
                         )}
                       </div>
                       <div className="col-md-6 mb-4">
-                        <div data-mdb-input-init className="form-outline">
+                        <div className="form-outline">
                           <input
                             type="date"
                             className="form-control form-control-lg"
+                            value={enlistmentDate}
                             onChange={(e) => setEnlistmentDate(e.target.value)}
                           />
-                          <label
-                            className="form-label"
-                            htmlFor="enlistmentDate"
-                          >
-                            *군 입대일
-                          </label>
+                          <label className="form-label">*군 입대일</label>
                         </div>
                         {formErrors.enlistmentDate && (
-                          <div className="alert alert-danger" role="alert">
+                          <div className="alert alert-danger">
                             {formErrors.enlistmentDate}
                           </div>
                         )}
@@ -156,74 +166,97 @@ const SignUp = () => {
 
                     <div className="row">
                       <div className="col-md-6 mb-4 pb-2">
-                        <div data-mdb-input-init className="form-outline">
+                        <div className="form-outline">
                           <input
                             type="password"
                             className="form-control form-control-lg"
+                            value={password}
                             onChange={(e) => setPassword(e.target.value)}
                           />
-                          <label className="form-label" htmlFor="password">
-                            *비밀번호
-                          </label>
+                          <label className="form-label">*비밀번호</label>
                         </div>
                         {formErrors.password && (
-                          <div className="alert alert-danger" role="alert">
+                          <div className="alert alert-danger">
                             {formErrors.password}
                           </div>
                         )}
                       </div>
                       <div className="col-md-6 mb-4 pb-2">
-                        <div data-mdb-input-init className="form-outline">
+                        <div className="form-outline">
                           <input
                             type="password"
                             className="form-control form-control-lg"
+                            value={passwordCheck}
                             onChange={(e) => setPasswordCheck(e.target.value)}
                           />
-                          <label
-                            className="form-label"
-                            htmlFor="confirmPassword"
-                          >
-                            *비밀번호 재확인
-                          </label>
+                          <label className="form-label">*비밀번호 재확인</label>
                         </div>
                         {formErrors.passwordCheck && (
-                          <div className="alert alert-danger" role="alert">
+                          <div className="alert alert-danger">
                             {formErrors.passwordCheck}
                           </div>
                         )}
                       </div>
                     </div>
-
                     <div className="row">
                       <div className="col-md-6 mb-4 pb-2">
-                        <div data-mdb-input-init className="form-outline">
+                        <div className="form-outline">
                           <input
-                            type="email"
                             className="form-control form-control-lg"
-                            onChange={(e) => setMail(e.target.value)}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                           />
-                          <label className="form-label" htmlFor="emailAddress">
-                            이메일
-                          </label>
+                          <label className="form-label">*이름</label>
                         </div>
+                        {formErrors.name && (
+                          <div className="alert alert-danger">
+                            {formErrors.name}
+                          </div>
+                        )}
                       </div>
                       <div className="col-md-6 mb-4 pb-2">
-                        <div data-mdb-input-init className="form-outline">
+                        <div className="form-outline">
                           <input
                             type="tel"
                             className="form-control form-control-lg"
+                            value={dept}
+                            onChange={(e) => setDept(e.target.value)}
+                          />
+                          <label className="form-label">*군 소속</label>
+                        </div>
+                        {formErrors.dept && (
+                          <div className="alert alert-danger">
+                            {formErrors.dept}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-6 mb-4 pb-2">
+                        <div className="form-outline">
+                          <input
+                            type="email"
+                            className="form-control form-control-lg"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                          />
+                          <label className="form-label">이메일</label>
+                        </div>
+                      </div>
+                      <div className="col-md-6 mb-4 pb-2">
+                        <div className="form-outline">
+                          <input
+                            className="form-control form-control-lg"
+                            value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
                           />
-                          <label className="form-label" htmlFor="phoneNumber">
-                            전화번호
-                          </label>
+                          <label className="form-label">전화번호</label>
                         </div>
                       </div>
                     </div>
 
                     <div className="mt-4 pt-2">
                       <button
-                        type="button"
                         className="btn btn-primary btn-lg"
                         onClick={handleSubmit}
                       >
@@ -231,10 +264,11 @@ const SignUp = () => {
                       </button>
                     </div>
                   </div>
+
                   <p className="mt-3">
                     이미 회원이신가요?{" "}
                     <button
-                      className="underline"
+                      className="btn btn-link"
                       style={{ cursor: "pointer" }}
                       onClick={goToSignIn}
                     >

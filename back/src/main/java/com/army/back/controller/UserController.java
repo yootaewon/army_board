@@ -16,7 +16,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/signUp")
+    @PostMapping("/api/signUp")
     public ResponseEntity<String> userSignUp(@RequestBody User user) {
         try {
             userService.insertUser(user);

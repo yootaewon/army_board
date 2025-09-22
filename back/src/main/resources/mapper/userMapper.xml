@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.army.back.mapper.UserMapper">
     <select id="findByArmyNumber" resultType="com.army.back.model.User">
-        SELECT * FROM users WHERE army_number = #{armyNumber}
+        SELECT * FROM military_user WHERE army_number = #{armyNumber}
     </select>
 
     <insert id="insertUser" parameterType="com.army.back.model.User">
-        INSERT INTO users (army_number, password, name, email, phone_number, army_type, enlistment_date, discharge_date)
-        VALUES (#{armyNumber}, #{password}, #{name}, #{email}, #{phoneNumber}, #{armyType}, #{enlistmentDate}, #{dischargeDate})
+        INSERT INTO military_user (army_number, password, email, name, dept, phone_number, army_type, enlistment_date, discharge_date )
+        VALUES (#{armyNumber}, #{password}, #{email}, #{name}, #{dept}, #{phoneNumber}, #{armyType}, #{enlistmentDate}, #{dischargeDate})
     </insert>
 </mapper>
