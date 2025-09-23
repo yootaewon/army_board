@@ -1,6 +1,6 @@
 package com.army.back.controller;
 
-import com.army.back.model.User;
+import com.army.back.dto.User;
 import com.army.back.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +19,18 @@ public class UserController {
     @PostMapping("/api/signUp")
     public ResponseEntity<String> userSignUp(@RequestBody User user) {
         try {
-            userService.insertUser(user);
+            userService.signUpUser(user);
             return ResponseEntity.ok("회원가입 성공");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/api/signIn")
+    public ResponseEntity<String> userSignIn(@RequestBody User user) {
+        try {
+            userService.signInUser(user.getArmyNumber(), user.getPassword());
+            return ResponseEntity.ok("로그인 성공");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

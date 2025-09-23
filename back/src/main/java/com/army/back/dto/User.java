@@ -1,8 +1,8 @@
-package com.army.back.model;
+package com.army.back.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import com.army.back.enums.ArmyType;  // ArmyType enum import
+import com.army.back.enums.ArmyType;  
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
