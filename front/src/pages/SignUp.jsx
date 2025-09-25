@@ -15,6 +15,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [name, setName] = useState();
+  const [role, setRole] = useState("병사");
   const [dept, setDept] = useState();
   const [formErrors, setFormErrors] = useState({});
 
@@ -31,6 +32,7 @@ const SignUp = () => {
     axios
       .post("/api/signUp", {
         armyType,
+        role,
         armyNumber,
         enlistmentDate,
         password,
@@ -79,10 +81,9 @@ const SignUp = () => {
               >
                 <div className="card-body p-4 p-md-5">
                   <h3 className="mb-4 pb-2 pb-md-0 mb-md-5">회원가입</h3>
-
                   <div>
                     <div className="row">
-                      <div className="col-md-12 mb-4">
+                      <div className="col-md-8 mb-4">
                         <div className="form-check form-check-inline">
                           <input
                             className="form-check-input"
@@ -93,7 +94,6 @@ const SignUp = () => {
                           />
                           <label className="form-check-label">육군</label>
                         </div>
-
                         <div className="form-check form-check-inline">
                           <input
                             className="form-check-input"
@@ -104,7 +104,6 @@ const SignUp = () => {
                           />
                           <label className="form-check-label">해군</label>
                         </div>
-
                         <div className="form-check form-check-inline">
                           <input
                             className="form-check-input"
@@ -115,7 +114,6 @@ const SignUp = () => {
                           />
                           <label className="form-check-label">공군</label>
                         </div>
-
                         <div className="form-check form-check-inline">
                           <input
                             className="form-check-input"
@@ -127,8 +125,29 @@ const SignUp = () => {
                           <label className="form-check-label">해병대</label>
                         </div>
                       </div>
+                      <div className="col-md-4 mb-4">
+                        <div className="form-check form-check-inline">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            value="병사"
+                            checked={role === "병사"}
+                            onChange={(e) => setRole(e.target.value)}
+                          />
+                          <label className="form-check-label">병사</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            value="간부"
+                            checked={role === "간부"}
+                            onChange={(e) => setRole(e.target.value)}
+                          />
+                          <label className="form-check-label">간부</label>
+                        </div>
+                      </div>
                     </div>
-
                     <div className="row">
                       <div className="col-md-6 mb-4">
                         <div className="form-outline">

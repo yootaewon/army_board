@@ -34,6 +34,7 @@
     dept VARCHAR(100),
     phone_number VARCHAR(50),
     army_type VARCHAR(50),
+    role VARCHAR(10),
     enlistment_date DATE,
     discharge_date DATE,
     UNIQUE(army_number)

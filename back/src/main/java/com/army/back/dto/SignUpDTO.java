@@ -2,7 +2,8 @@ package com.army.back.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import com.army.back.enums.ArmyType;  
+import com.army.back.enums.ArmyType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,12 +13,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class SignUpDTO {
     private String armyNumber;
     private String password;
     private String email;
     private String phoneNumber;
-    private ArmyType armyType;  
+    private ArmyType armyType;
+    private String role;
     private String name;
     private String dept;
 

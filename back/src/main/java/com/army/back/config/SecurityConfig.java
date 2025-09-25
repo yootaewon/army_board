@@ -1,5 +1,8 @@
 package com.army.back.config;
 
+import com.army.back.jwt.JwtSecurityConfig;
+import com.army.back.jwt.TokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,13 +13,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor  
 public class SecurityConfig {
+
+    private final TokenProvider tokenProvider;  
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -34,8 +39,9 @@ public class SecurityConfig {
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // JWT 사용 시 세션을 사용하지 않도록 설정
-                );
+                )
+                .apply(new JwtSecurityConfig(tokenProvider));
+
         return http.build();
     }
-
 }

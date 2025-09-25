@@ -2,10 +2,10 @@ package com.army.back.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.army.back.dto.User;
+import com.army.back.dto.SignUpDTO;
 
 @Mapper
 public interface UserMapper {
-    User findByArmyNumber(String armyNumber);
-    void insertUser(User user);
+    SignUpDTO findByArmyNumber(String armyNumber);
+    void insertUser(SignUpDTO user);
 }

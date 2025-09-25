@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import mnd from "../asset/mnd.png";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
   const navigate = useNavigate();
 
+  const [armyNumber, setArmyNumber] = useState();
+  const [password, setPassword] = useState();
+
   const userLogin = () => {
+    axios
+      .post("/api/signIn", { armyNumber, password })
+      .then((res) => {
+        localStorage.setItem("accessToken", res.data.accessToken);
+        localStorage.setItem("refreshToken", res.data.refreshToken);
+        navigate("/");
+      })
+      .catch((error) => {
+        toast.error("로그인 실패: " + (error.response.data || "서버 오류"));
+      });
   };
 
   const goToSignUp = () => {
@@ -19,7 +34,11 @@ const SignIn = () => {
         <h1 className="h3 mb-3 fw-normal">로그인</h1>
 
         <div className="form-floating mb-3">
-          <input className="form-control" id="armyNumber" placeholder="군 번" />
+          <input
+            className="form-control"
+            id="armyNumber"
+            onChange={(e) => setArmyNumber(e.target.value)}
+          />
           <label htmlFor="armyNumber">군 번</label>
         </div>
 
@@ -28,7 +47,7 @@ const SignIn = () => {
             type="password"
             className="form-control"
             id="password"
-            placeholder="비밀번호"
+            onChange={(e) => setPassword(e.target.value)}
           />
           <label htmlFor="password">비밀번호</label>
         </div>
