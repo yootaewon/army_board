@@ -29,17 +29,22 @@ const Header = () => {
             <ul className="navbar-nav me-auto mb-2 mb-md-0">
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="#">
-                  Home
+                  전역일
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Link
+                <a className="nav-link active" href="#">
+                  휴가 계획
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link disabled" aria-disabled="true">
-                  Disabled
+                <a className="nav-link active" aria-disabled="true">
+                  군 게시판
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link active" aria-disabled="true">
+                  오늘의 메뉴
                 </a>
               </li>
             </ul>

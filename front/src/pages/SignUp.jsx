@@ -45,7 +45,7 @@ const SignUp = () => {
         toast("회원가입 성공");
       })
       .catch((err) => {
-        toast(err.response.data);
+        toast.error(err.response.data);
       });
   };
 
