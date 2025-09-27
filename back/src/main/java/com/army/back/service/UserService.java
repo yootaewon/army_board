@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import com.army.back.dto.JwtToken;
 import com.army.back.dto.SignInDTO;
 import com.army.back.dto.SignUpDTO;
 import com.army.back.enums.*;
@@ -32,15 +33,14 @@ public class UserService {
         userMapper.insertUser(user);
     }
 
-     public String signInUser(SignInDTO signInDTO) {
-    SignUpDTO user = userMapper.findByArmyNumber(signInDTO.getArmyNumber());
-    if (user == null || !passwordEncoder.matches(signInDTO.getPassword(), user.getPassword())) {
-        throw new RuntimeException("군번 또는 비밀번호가 일치하지 않습니다.");
-    }
+    public JwtToken signInUser(SignInDTO signInDTO) {
+        SignUpDTO user = userMapper.findByArmyNumber(signInDTO.getArmyNumber());
+        if (user == null || !passwordEncoder.matches(signInDTO.getPassword(), user.getPassword())) {
+            throw new RuntimeException("군번 또는 비밀번호가 일치하지 않습니다.");
+        }
+        String accessToken = tokenProvider.generateAccessToken(signInDTO.getArmyNumber());
+        String refreshToken = tokenProvider.generateRefreshToken(signInDTO.getArmyNumber());
 
-    String accessToken = tokenProvider.createAccessToken(signInDTO.getArmyNumber());
-    String refreshToken = tokenProvider.createRefreshToken();
-
-    return String.format("{\"access\":\"%s\", \"refresh\":\"%s\"}", accessToken, refreshToken);
+        return new JwtToken(accessToken,refreshToken);
 }
 }

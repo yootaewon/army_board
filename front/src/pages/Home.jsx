@@ -1,4 +1,5 @@
 import React from "react";
+import DischargeDate from "../components/DischargeDate";
 
 const Home = () => {
   return (
@@ -8,7 +9,7 @@ const Home = () => {
       <br></br>
       <br></br>
 
-      <p>메인페이지</p>
+      <DischargeDate />
     </div>
   );
 };

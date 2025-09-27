@@ -1,25 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import mnd from "../asset/mnd.png";
-import axios from "axios";
+import { setAccessToken } from "../utils/Auth";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const SignIn = () => {
   const navigate = useNavigate();
-
-  const [armyNumber, setArmyNumber] = useState();
-  const [password, setPassword] = useState();
+  const [armyNumber, setArmyNumber] = useState("");
+  const [password, setPassword] = useState("");
 
   const userSignIn = () => {
     axios
       .post("/api/signIn", { armyNumber, password })
       .then((res) => {
-        localStorage.setItem("accessToken", res.data.access);
-        localStorage.setItem("refreshToken", res.data.refresh);
+        const token = `Bearer ${res.data.accessToken}`;
+        localStorage.setItem("accessToken", token);
+        setAccessToken(token);
         navigate("/");
       })
       .catch((err) => {
-        toast.error(err.response.data);
+        toast.error(err.response?.data?.message || "로그인 실패");
       });
   };
 
@@ -32,7 +33,6 @@ const SignIn = () => {
       <ToastContainer />
       <div className="d-flex justify-content-center align-items-center min-vh-100">
         <div className="m-auto" style={{ maxWidth: "400px", width: "100%" }}>
-          <img className="mb-4" src={mnd} alt="" width="70" height="70" />
           <h1 className="h3 mb-3 fw-normal">로그인</h1>
           <div className="form-floating mb-3">
             <input
@@ -51,11 +51,7 @@ const SignIn = () => {
             />
             <label htmlFor="password">비밀번호</label>
           </div>
-          <button
-            className="btn btn-primary w-100 py-2"
-            type="button"
-            onClick={userSignIn}
-          >
+          <button className="btn btn-primary w-100 py-2" onClick={userSignIn}>
             로그인
           </button>
           <p className="mt-3">

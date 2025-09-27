@@ -1,14 +1,18 @@
 package com.army.back.controller;
 
+import com.army.back.dto.JwtToken;
 import com.army.back.dto.SignInDTO;
 import com.army.back.dto.SignUpDTO;
+import com.army.back.service.ReissueService;
 import com.army.back.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,9 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final AuthenticationManager authenticationManager;
-
     private final UserService userService;
+    private final ReissueService reissueService;
 
     @PostMapping("/api/signUp")
     public ResponseEntity<String> userSignUp(@RequestBody SignUpDTO user) {
@@ -32,13 +35,30 @@ public class UserController {
     }
 
     @PostMapping("/api/signIn")
-    public ResponseEntity<String> userSignIn(@RequestBody SignInDTO signInDTO) {
+    public ResponseEntity<JwtToken> userSignIn(@RequestBody SignInDTO signInDTO) {
         try {
-            String tokens = userService.signInUser(signInDTO);
-            return ResponseEntity.ok(tokens);
+            JwtToken token = userService.signInUser(signInDTO);
+
+            ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", token.getRefreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(7 * 24 * 60 * 60)
+                .sameSite("Strict")
+                .build();
+
+            return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+            .body(new JwtToken(token.getAccessToken(), null)); 
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @PostMapping("/api/reissue")
+    public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
+        ResponseEntity<String> newAccessToken = reissueService.reissue(request, response);
+        return newAccessToken;
     }
 }

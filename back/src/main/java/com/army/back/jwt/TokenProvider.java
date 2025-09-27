@@ -2,81 +2,67 @@ package com.army.back.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
-import com.army.back.service.CustomUserDetailsService;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    @Value("${jwt.secret}")
-    private String secretKey;
+    private final Key key; 
 
-    @Value("${jwt.token-validity-in-seconds}")
-    private long tokenValidityInSeconds;
+    @Value("${jwt.access-token-validity-in-seconds}")
+    private long accessTokenExpiration;
 
-    private Key key;
+    @Value("${jwt.refresh-token-validity-in-seconds}")
+    private long refreshTokenExpiration;
 
-    private final CustomUserDetailsService userDetailsService;
-
-    @PostConstruct
-    public void init() {
-        byte[] keyBytes = Base64.getDecoder().decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+    public TokenProvider() {
+        this.key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
-    public String createAccessToken(String armyNumber) {
-        long now = System.currentTimeMillis();
-        Date expiry = new Date(now + tokenValidityInSeconds * 1000);
-
+    public String generateAccessToken(String armyNumber){
         return Jwts.builder()
-                .setSubject(armyNumber)
-                .setIssuedAt(new Date(now))
-                .setExpiration(expiry)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+            .setSubject(armyNumber)
+            .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration * 1000)) 
+            .signWith(key) 
+            .compact();
     }
 
-    public String createRefreshToken() {
-        long now = System.currentTimeMillis();
-        Date expiry = new Date(now + 14 * 24 * 60 * 60 * 1000); // 14일
-
+    public String generateRefreshToken(String armyNumber){
         return Jwts.builder()
-                .setIssuedAt(new Date(now))
-                .setExpiration(expiry)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+            .setSubject(armyNumber)
+            .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration * 1000)) 
+            .signWith(key)  
+            .compact();
     }
 
-    public Authentication getAuthentication(String token) {
-        String armyNumber = getArmyNumber(token);
-        var userDetails = userDetailsService.loadUserByUsername(armyNumber);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    public String extractArmyNumber(String token){
+        return Jwts.parser()
+            .setSigningKey(key)  
+            .parseClaimsJws(token)
+            .getBody()
+            .getSubject();
     }
 
-    public String getArmyNumber(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+    private Date extractExpiration(String token){
+        return Jwts.parser()
+            .setSigningKey(key)  
+            .parseClaimsJws(token)
+            .getBody()
+            .getExpiration();
     }
 
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
+    public boolean isTokenExpired(String token){
+        return extractExpiration(token).before(new Date());
+    }
+
+    public boolean validateToken(String token){
+        String armyNumber = extractArmyNumber(token);
+        return armyNumber != null && !isTokenExpired(token);
     }
 }
