@@ -1,7 +1,17 @@
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../redux/Actions";
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+
+  const signOut = () => {
+    localStorage.removeItem("accessToken");
+    dispatch(logout());
+    navigate("/signIn");
+  };
 
   const goToSignIn = () => {
     navigate("/signIn");
@@ -48,9 +58,23 @@ const Header = () => {
                 </a>
               </li>
             </ul>
-            <button className="btn btn-outline-success" onClick={goToSignIn}>
-              로그인
-            </button>
+            {!isLoggedIn ? (
+              <button
+                className="btn btn-outline-success"
+                type="submit"
+                onClick={goToSignIn}
+              >
+                로그인
+              </button>
+            ) : (
+              <button
+                className="btn btn-outline-success"
+                type="submit"
+                onClick={signOut}
+              >
+                로그아웃
+              </button>
+            )}
           </div>
         </div>
       </nav>

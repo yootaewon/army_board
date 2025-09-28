@@ -8,6 +8,9 @@ import Header from "./components/Header";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AuthCheck from "./router/AuthCheck";
 import { loadTokenFromStorage } from "./utils/Auth";
+import Profile from "./pages/Profile";
+import { Provider } from "react-redux";
+import store from "./redux/Store";
 
 function App() {
   useEffect(() => {
@@ -15,17 +18,19 @@ function App() {
   }, []);
   return (
     <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signIn" element={<SignIn />} />
-        <Route path="/signUp" element={<SignUp />} />
-        <Route element={<AuthCheck />}>
-          <Route path="/profile" element={<SignIn />} />
+      <Provider store={store}>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/signIn" element={<SignIn />} />
-          <Route path="/signIn" element={<SignIn />} />
-        </Route>
-      </Routes>
+          <Route path="/signUp" element={<SignUp />} />
+          <Route element={<AuthCheck />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/signIn" element={<SignIn />} />
+            <Route path="/signIn" element={<SignIn />} />
+          </Route>
+        </Routes>
+      </Provider>
     </BrowserRouter>
   );
 }
