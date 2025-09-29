@@ -1,6 +1,7 @@
+import { useDispatch } from "react-redux";
 import axios from "axios";
-import { getAccessToken, setAccessToken, clearTokens } from "../utils/Auth";
-
+import { login, logout } from "../redux/userSlice";
+import { getAccessToken } from "../redux/userSlice";
 const api = axios.create({
   baseURL: "/api",
   withCredentials: true,
@@ -9,7 +10,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = getAccessToken();
-
+    
     if (token) {
       config.headers.Authorization = token;
     }
@@ -31,15 +32,15 @@ api.interceptors.response.use(
           {},
           { withCredentials: true }
         );
-        console.log(res.data);
-        const newToken = `Bearer ${res.data}`;
-        localStorage.setItem("accessToken", newToken);
-        setAccessToken(newToken);
-
-        originalRequest.headers.Authorization = newToken;
+                const newToken = res.data.accessToken;
+        const dispatch = useDispatch();
+        dispatch(login(newToken));
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        clearTokens();
+        const dispatch = useDispatch();
+        dispatch(logout());
+        localStorage.removeItem("accessToken");
         window.location.href = "/signIn";
         return Promise.reject(refreshError);
       }

@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { setAccessToken } from "../utils/Auth";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/userSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [armyNumber, setArmyNumber] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      dispatch(login(token));
+      navigate("/");
+    }
+  }, [dispatch, navigate]);
 
   const userSignIn = () => {
     axios
@@ -16,7 +26,7 @@ const SignIn = () => {
       .then((res) => {
         const token = `Bearer ${res.data.accessToken}`;
         localStorage.setItem("accessToken", token);
-        setAccessToken(token);
+        dispatch(login(token));
         navigate("/");
       })
       .catch((err) => {

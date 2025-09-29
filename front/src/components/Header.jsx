@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../redux/Actions";
+import { logout } from "../redux/userSlice";
 
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+
+  const { isLoggedIn } = useSelector((state) => state.user);
 
   const signOut = () => {
     localStorage.removeItem("accessToken");
