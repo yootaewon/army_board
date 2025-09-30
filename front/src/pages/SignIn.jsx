@@ -12,19 +12,11 @@ const SignIn = () => {
   const [armyNumber, setArmyNumber] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      dispatch(login(token));
-      navigate("/");
-    }
-  }, [dispatch, navigate]);
-
   const userSignIn = () => {
     axios
       .post("/api/signIn", { armyNumber, password })
       .then((res) => {
-        const token = `Bearer ${res.data.accessToken}`;
+        const token = res.data.accessToken;
         localStorage.setItem("accessToken", token);
         dispatch(login(token));
         navigate("/");

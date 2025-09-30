@@ -1,12 +1,14 @@
 package com.army.back.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.army.back.dto.DischargeDate;
 import com.army.back.dto.SignUpDTO;
 import com.army.back.jwt.TokenProvider;
 import com.army.back.mapper.UserMapper;
@@ -31,13 +33,18 @@ public class DichargeService {
             String armyNumber = tokenProvider.extractArmyNumber(token);
 
             SignUpDTO user = userMapper.findByArmyNumber(armyNumber);
-            if (user == null) {
-                return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
-            }
+            LocalDate currentDate = LocalDate.now();
+            long elapsedDays = ChronoUnit.DAYS.between(user.getEnlistmentDate(), currentDate);
+            long totalDays = ChronoUnit.DAYS.between(user.getEnlistmentDate(), user.getDischargeDate());
 
-            Map<String, LocalDate> result = new HashMap<>();
-            result.put("enlistmentDate", user.getEnlistmentDate());
-            result.put("dischargeDate", user.getDischargeDate());
+            double completionPercentage = (double) elapsedDays / totalDays * 100;
+            String formattedPercentage = String.format("%.4f", completionPercentage); 
+
+            DischargeDate result = new DischargeDate();
+            result.setEnlistmentDate(user.getEnlistmentDate());
+            result.setDischargeDate(user.getDischargeDate());
+            result.setPersent(formattedPercentage);
+
             return ResponseEntity.ok(result);
     }
 

@@ -20,8 +20,15 @@ const userSlice = createSlice({
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const checkLoginStatus = () => (dispatch) => {
+  const token = localStorage.getItem("accessToken");
+  if (token) {
+    dispatch(login(token));
+  } else {
+    dispatch(logout());
+  }
+};
 
-export const getAccessToken = (state) => state.user.token;
+export const { login, logout } = userSlice.actions;
 
 export default userSlice.reducer;
