@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignUpDTO {
+public class SignUp {
     private String armyNumber;
     private String password;
     private String email;

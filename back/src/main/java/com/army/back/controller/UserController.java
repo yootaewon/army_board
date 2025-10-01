@@ -1,8 +1,8 @@
 package com.army.back.controller;
 
 import com.army.back.dto.JwtToken;
-import com.army.back.dto.SignInDTO;
-import com.army.back.dto.SignUpDTO;
+import com.army.back.dto.SignIn;
+import com.army.back.dto.SignUp;
 import com.army.back.service.ReissueService;
 import com.army.back.service.UserService;
 
@@ -25,7 +25,7 @@ public class UserController {
     private final ReissueService reissueService;
 
     @PostMapping("/api/signUp")
-    public ResponseEntity<String> userSignUp(@RequestBody SignUpDTO user) {
+    public ResponseEntity<String> userSignUp(@RequestBody SignUp user) {
         try {
             userService.signUpUser(user);
             return ResponseEntity.ok("회원가입 성공");
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/api/signIn")
-    public ResponseEntity<JwtToken> userSignIn(@RequestBody SignInDTO signInDTO) {
+    public ResponseEntity<JwtToken> userSignIn(@RequestBody SignIn signInDTO) {
         try {
             JwtToken token = userService.signInUser(signInDTO);
 
