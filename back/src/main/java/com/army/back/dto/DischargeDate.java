@@ -9,4 +9,7 @@ public class DischargeDate {
     private LocalDate enlistmentDate;
     private LocalDate dischargeDate;
     private String persent;
+    private long totalDays;
+    private long remaingDays;
+    private long currentDays;
 }

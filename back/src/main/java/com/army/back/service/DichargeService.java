@@ -2,17 +2,12 @@ package com.army.back.service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.army.back.dto.DischargeDate;
 import com.army.back.dto.SignUpDTO;
 import com.army.back.jwt.TokenProvider;
 import com.army.back.mapper.UserMapper;
-
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -34,16 +29,19 @@ public class DichargeService {
 
             SignUpDTO user = userMapper.findByArmyNumber(armyNumber);
             LocalDate currentDate = LocalDate.now();
-            long elapsedDays = ChronoUnit.DAYS.between(user.getEnlistmentDate(), currentDate);
-            long totalDays = ChronoUnit.DAYS.between(user.getEnlistmentDate(), user.getDischargeDate());
+            long currentDays = ChronoUnit.DAYS.between(user.getEnlistmentDate(), currentDate)+1;
+            long totalDays = ChronoUnit.DAYS.between(user.getEnlistmentDate(), user.getDischargeDate())+1;
 
-            double completionPercentage = (double) elapsedDays / totalDays * 100;
+            double completionPercentage = (double) currentDays / totalDays * 100;
             String formattedPercentage = String.format("%.4f", completionPercentage); 
 
             DischargeDate result = new DischargeDate();
             result.setEnlistmentDate(user.getEnlistmentDate());
             result.setDischargeDate(user.getDischargeDate());
             result.setPersent(formattedPercentage);
+            result.setTotalDays(totalDays);
+            result.setCurrentDays(currentDays);
+            result.setRemaingDays(totalDays-currentDays);
 
             return ResponseEntity.ok(result);
     }
