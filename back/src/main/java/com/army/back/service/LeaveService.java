@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.army.back.dto.Leave;
+import com.army.back.dto.LeaveTypeCount;
 import com.army.back.dto.SignUp;
 import com.army.back.enums.ArmyType;
 import com.army.back.mapper.LeaveMapper;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,28 +19,32 @@ public class LeaveService {
 
     public void registerAnnualLeave(SignUp user,ArmyType armyType){
         Leave leave = Leave.builder()
-            .armyNumber(user.getArmyNumber())
-            .leaveType("연가")
+            .leaveType("comfort")
             .leaveDays(armyType.getLeave(armyType))
             .reason("기본 연가")
             .build();
-        leaveMapper.insertLeave(leave);
+        leaveMapper.insertLeave(leave,user.getArmyNumber());
     }
 
-    public void registerLeave(Leave leave){
-        leaveMapper.insertLeave(leave);
+    public void registerLeaveType(Leave leave, String armyNumber){
+        leaveMapper.insertLeave(leave,armyNumber);
     }
 
-    public void deleteLeave(Leave leave){
-        leaveMapper.deleteLeave(leave);
+    public void deleteLeaveType(List<Long> leaveIds){
+        leaveMapper.deleteLeave(leaveIds);
     }
 
-    public void modifyLeave(Leave leave){
+    public void modifyLeaveType(Leave leave){
         leaveMapper.modifyLeave(leave);
     }
 
-    public List<Leave> selectLeaveHistory(Leave leave){
-        List<Leave> historyList = leaveMapper.selectLeaveHistory(leave);
+    public List<Leave> selectLeaveTypeHistory(String armyNumber){
+        List<Leave> historyList = leaveMapper.selectLeaveHistory(armyNumber);
         return historyList;
     }
+
+    public LeaveTypeCount selectLeaveTypeCount(String armyNumber) {
+    return leaveMapper.selectLeaveTypeCount(armyNumber);
+    }
+
 }

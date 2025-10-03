@@ -7,9 +7,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import com.army.back.dto.CustomUserDetails;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -28,8 +28,9 @@ public class JwtFilter extends OncePerRequestFilter {
         if (token != null && tokenProvider.validateToken(token)) {
             String armyNumber = tokenProvider.extractArmyNumber(token);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    armyNumber, null, new ArrayList<>()); 
+            CustomUserDetails userDetails = new CustomUserDetails(armyNumber);
+            UsernamePasswordAuthenticationToken authentication =
+            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

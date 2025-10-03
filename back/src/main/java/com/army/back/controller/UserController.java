@@ -15,16 +15,18 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final ReissueService reissueService;
 
-    @PostMapping("/api/signUp")
+    @PostMapping("/signUp")
     public ResponseEntity<String> userSignUp(@RequestBody SignUp user) {
         try {
             userService.signUpUser(user);
@@ -34,7 +36,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/api/signIn")
+    @PostMapping("/signIn")
     public ResponseEntity<JwtToken> userSignIn(@RequestBody SignIn signInDTO) {
         try {
             JwtToken token = userService.signInUser(signInDTO);
@@ -56,7 +58,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/api/reissue")
+    @PostMapping("/reissue")
     public ResponseEntity<String> reissue(HttpServletRequest request, HttpServletResponse response) {
         ResponseEntity<String> newAccessToken = reissueService.reissue(request, response);
         return newAccessToken;

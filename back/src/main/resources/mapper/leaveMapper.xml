@@ -2,9 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.army.back.mapper.LeaveMapper">
 
-    <select id="selectLeaveHistory" resultType="com.army.back.dto.Leave">
-        SELECT * FROM military_leave WHERE army_number = #{armyNumber}
-    </select>
+    <insert id="insertLeave">
+        INSERT INTO military_leave (army_number, leave_type, leave_days, reason)
+        VALUES (
+            #{armyNumber},
+            #{leave.leaveType},
+            #{leave.leaveDays},
+            #{leave.reason}
+        )
+    </insert>
+
+    <delete id="deleteLeave">
+        DELETE FROM military_leave WHERE leave_id IN
+    <foreach item="leaveId" collection="leaveIds" open="(" separator="," close=")">
+        #{leaveId}
+    </foreach>
+    </delete>
 
     <update id="modifyLeave">
         UPDATE military_leave 
@@ -12,13 +25,16 @@
         WHERE leave_id = #{leaveId}
     </update>
 
-    <delete id="deleteLeave">
-        DELETE FROM military_leave WHERE leave_id = #{leaveId}
-    </delete>
+    <select id="selectLeaveTypeCount" resultType="com.army.back.dto.LeaveTypeCount">
+        SELECT
+            SUM(CASE WHEN leave_type = 'comfort' THEN leave_days ELSE 0 END) AS comfort,
+            SUM(CASE WHEN leave_type = 'reward' THEN leave_days ELSE 0 END) AS reward,
+            SUM(CASE WHEN leave_type = 'annual' THEN leave_days ELSE 0 END) AS annual
+        FROM military_leave
+        WHERE army_number = #{armyNumber}
+    </select>
 
-    <insert id="insertLeave">
-        INSERT INTO military_leave (army_number, leave_type, leave_days, reason)
-        VALUES (#{armyNumber}, #{leaveType}, #{leaveDays}, #{reason})
-    </insert>
-
+    <select id="selectLeaveHistory" resultType="com.army.back.dto.Leave">
+        SELECT * FROM military_leave WHERE army_number = #{armyNumber} ORDER BY reg_data_time DESC
+    </select>
 </mapper>

@@ -1,13 +1,11 @@
 package com.army.back.service;
 
 import com.army.back.mapper.UserMapper;
-import com.army.back.mapper.LeaveMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import com.army.back.dto.JwtToken;
-import com.army.back.dto.Leave;
 import com.army.back.dto.SignIn;
 import com.army.back.dto.SignUp;
 import com.army.back.enums.ArmyType;

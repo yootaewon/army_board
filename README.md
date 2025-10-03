@@ -57,12 +57,14 @@ CREATE TABLE military_user (
 
 ```sql
 CREATE TABLE military_leave (
-    leave_id BIGINT AUTO_INCREMENT PRIMARY KEY,  -- 휴가 ID
-    army_number VARCHAR(20) NOT NULL,            -- 군번
-    leave_type VARCHAR(20) NOT NULL,             -- 휴가 종류 (포상, 위로, 연가)
-    leave_days INT,                              -- 휴가 일수
-    reason VARCHAR(255),                         -- 휴가 사유
-    FOREIGN KEY (army_number) REFERENCES military_user(army_number) ON DELETE CASCADE  -- 군번을 기준으로 외래키 설정
+    leave_id BIGINT AUTO_INCREMENT PRIMARY KEY,       -- 휴가 ID
+    army_number VARCHAR(20) NOT NULL,                 -- 군번
+    leave_type VARCHAR(20) NOT NULL,                  -- 휴가 종류 (포상, 위로, 연가, 징계)
+    leave_days INT,                                   -- 휴가 일수
+    reason VARCHAR(255),                              -- 휴가 사유
+    reg_date_time DATETIME DEFAULT CURRENT_TIMESTAMP, -- 등록 일시 (현재 시간)
+    FOREIGN KEY (army_number) REFERENCES military_user(army_number)ON DELETE CASCADE   -- 사용자 삭제 시 휴가도 함께 삭제
 );
+
 ```
 

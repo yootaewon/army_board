@@ -1,8 +1,6 @@
 package com.army.back.enums;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 public enum ArmyType {
     army(1, 6,1,24),
@@ -13,14 +11,14 @@ public enum ArmyType {
     private final int year;
     private final int month;
     private final int day;
-    private final int leave;
+    private final int annualLeave;
 
 
-    ArmyType(int year, int month, int day, int leave) {
+    ArmyType(int year, int month, int day, int annualLeave) {
         this.year = year;
         this.month = month;
         this.day = day;
-        this.leave = leave;
+        this.annualLeave = annualLeave;
     }
 
     public LocalDate calculateDischargeDate(LocalDate enlistmentDate) {
@@ -29,7 +27,7 @@ public enum ArmyType {
     }
 
     public int getLeave(ArmyType armyType){
-        return leave; 
+        return annualLeave; 
     }
 }
 
