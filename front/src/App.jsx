@@ -1,6 +1,7 @@
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Leave from "./pages/Leave";
 import Header from "./components/Header";
 import store from "./redux/userStore";
 import AuthCheck from "./router/AuthCheck";
@@ -26,7 +27,7 @@ function App() {
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/signUp" element={<SignUp />} />
           <Route element={<AuthCheck />}>
-            <Route path="/profile" element={<SignIn />} />
+            <Route path="/leave" element={<Leave />} />
           </Route>
         </Routes>
       </BrowserRouter>

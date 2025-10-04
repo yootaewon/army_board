@@ -18,6 +18,18 @@ const Header = () => {
     navigate("/signIn");
   };
 
+  const goToLeave = () => {
+    navigate("/leave");
+  };
+
+  const goToBoard = () => {
+    navigate("/board");
+  };
+
+  const goToMenu = () => {
+    navigate("/menu");
+  };
+
   return (
     <header>
       <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
@@ -39,24 +51,19 @@ const Header = () => {
           <div className="collapse navbar-collapse" id="navbarCollapse">
             <ul className="navbar-nav me-auto mb-2 mb-md-0">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
-                  전역일
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link active" href="#">
+                <button className="nav-link active" onClick={goToLeave}>
                   휴가 계획
-                </a>
+                </button>
               </li>
               <li className="nav-item">
-                <a className="nav-link active" aria-disabled="true">
+                <button className="nav-link active" onClick={goToBoard}>
                   군 게시판
-                </a>
+                </button>
               </li>
               <li className="nav-item">
-                <a className="nav-link active" aria-disabled="true">
+                <button className="nav-link active" onClick={goToMenu}>
                   오늘의 메뉴
-                </a>
+                </button>
               </li>
             </ul>
             {!isLoggedIn ? (

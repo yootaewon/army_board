@@ -6,6 +6,7 @@ import com.army.back.dto.CustomUserDetails;
 import com.army.back.dto.Leave;
 import com.army.back.dto.LeaveTypeCount;
 import com.army.back.service.LeaveService;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -17,13 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class LeaveTypeController {
 
-    private LeaveService leaveService;
+    private final LeaveService leaveService;
 
-    @PostMapping("/leave-tpye/select")
-    public ResponseEntity<?> selectLeave(@AuthenticationPrincipal CustomUserDetails user) {
+    @PostMapping("/leave-type/select")
+    public ResponseEntity<?> selectLeaveCount(@AuthenticationPrincipal CustomUserDetails user) {
         try {
             LeaveTypeCount leave = leaveService.selectLeaveTypeCount(user.getArmyNumber());
             return ResponseEntity.ok(leave);
@@ -32,7 +34,7 @@ public class LeaveTypeController {
         }
     }
     
-    @PostMapping("/leave-tpye/register")
+    @PostMapping("/leave-type/register")
     public ResponseEntity<String> registerLeaveType(@RequestBody Leave leave, @AuthenticationPrincipal CustomUserDetails user) {
         try {
             leaveService.registerLeaveType(leave,user.getArmyNumber());
@@ -52,7 +54,7 @@ public class LeaveTypeController {
         }
     }
 
-    @PostMapping("/leave-tpye/modify")
+    @PostMapping("/leave-type/modify")
     public ResponseEntity<String> modifyLeaveType(@RequestBody Leave leave) {
          try {
             leaveService.modifyLeaveType(leave);
@@ -62,7 +64,7 @@ public class LeaveTypeController {
         }
     }
 
-    @PostMapping("/leave-tpye/select/history")
+    @PostMapping("/leave-type/select/history")
     public ResponseEntity<?> selectLeaveHistoryType(@AuthenticationPrincipal CustomUserDetails user) {
          try {
             List<Leave> leaveHistory= leaveService.selectLeaveTypeHistory(user.getArmyNumber());

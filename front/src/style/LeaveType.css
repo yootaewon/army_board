@@ -1,0 +1,23 @@
+.leave-card {
+  max-width: 1000px;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  background-color: #fff;
+}
+
+.leave-card .row {
+  margin-bottom: 15px;
+}
+
+.leave-card .form-label {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.leave-card h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
