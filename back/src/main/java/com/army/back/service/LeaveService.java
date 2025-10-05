@@ -20,7 +20,7 @@ public class LeaveService {
 
     public void registerAnnualLeave(SignUp user, ArmyType armyType) {
         Leave leave = Leave.builder()
-            .leaveType("annual")
+            .leaveType("연가")
             .leaveDays(armyType.getLeave(armyType))
             .reason("기본 연가")
             .build();
@@ -56,12 +56,12 @@ public class LeaveService {
     }
 
     public List<Leave> selectLeaveTypeHistory(String armyNumber) {
-        List<Leave> historyList = leaveMapper.selectLeaveHistory(armyNumber);
-
-        if (historyList == null || historyList.isEmpty()) {
-            throw new RuntimeException("해당 군번의 연가 이력이 없습니다: " + armyNumber);
+        try {
+            List<Leave> historyList = leaveMapper.selectLeaveHistory(armyNumber);
+            return historyList;
+        } catch (DataAccessException e) {
+            throw new RuntimeException("휴가 기록 조회 중 오류가 발생했습니다.", e);
         }
-        return historyList;
     }
 
     public LeaveTypeCount selectLeaveTypeCount(String armyNumber) {

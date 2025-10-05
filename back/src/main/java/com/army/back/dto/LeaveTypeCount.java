@@ -11,4 +11,5 @@ public class LeaveTypeCount {
     private int comfort;
     private int reward;
     private int annual;
+    private int discipline;
 }

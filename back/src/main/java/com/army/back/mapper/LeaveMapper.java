@@ -11,7 +11,7 @@ public interface LeaveMapper {
 
     void insertLeave(@Param("leave") Leave leave, @Param("armyNumber") String armyNumber);
 
-    void deleteLeave(List<Long> leaveId);
+    void deleteLeave(@Param("leaveIds") List<Long> leaveIds);
 
     void modifyLeave(Leave leave);
     
