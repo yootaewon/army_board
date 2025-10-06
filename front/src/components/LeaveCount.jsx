@@ -1,15 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import api from "../api/AxiosInstance";
 import "../style/LeaveType.css";
-import LeaveModal from "../modal/LeaveModal";
+import LeaveHistoryModal from "../modal/LeaveManageModal";
+import LeaveRegisterModal from "../modal/LeaveRegisterModal";
 import { toast } from "react-toastify";
 
-const LeaveType = () => {
+const LeaveCount = () => {
   const [annual, setAnnual] = useState(0);
   const [reward, setReward] = useState(0);
   const [comfort, setComfort] = useState(0);
   const [discipline, setDiscipline] = useState(0);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [manageModalOpen, setManageModalOpen] = useState(false);
+  const [registerModalOpen, setRegisterModalOpen] = useState(false);
+
+  const manageModalRef = useRef(null);
+  const registerModalRef = useRef(null);
 
   useEffect(() => {
     getLeaveTypeCount();
@@ -28,7 +33,8 @@ const LeaveType = () => {
     }
   };
 
-  const modalToggle = () => setModalOpen((prev) => !prev);
+  const manageModalToggle = () => setManageModalOpen(!manageModalOpen);
+  const registerModalToggle = () => setRegisterModalOpen(!registerModalOpen);
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-70">
@@ -53,22 +59,30 @@ const LeaveType = () => {
         </div>
 
         <div className="d-flex justify-content-end mt-4 gap-2">
-          <button className="btn btn-primary" type="button">
+          <button className="btn btn-primary" onClick={registerModalToggle}>
             등록
           </button>
-          <button
-            className="btn btn-primary"
-            type="button"
-            onClick={modalToggle}
-          >
+          <button className="btn btn-primary" onClick={manageModalToggle}>
             관리
           </button>
         </div>
-
-        {modalOpen && <LeaveModal modalToggle={modalToggle} />}
+        {manageModalOpen && (
+          <LeaveHistoryModal
+            modalBackground={manageModalRef}
+            modalToggle={manageModalToggle}
+            onUpdate={getLeaveTypeCount}
+          />
+        )}
+        {registerModalOpen && (
+          <LeaveRegisterModal
+            modalBackground={registerModalRef}
+            modalToggle={registerModalToggle}
+            onUpdate={getLeaveTypeCount}
+          />
+        )}
       </div>
     </div>
   );
 };
 
-export default LeaveType;
+export default LeaveCount;
