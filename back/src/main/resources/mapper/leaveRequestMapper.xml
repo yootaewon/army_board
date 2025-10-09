@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.army.back.mapper.LeaveRequestMapper">
+
+    <resultMap id="LeaveResultMap" type="com.army.back.dto.LeaveRequest">
+        <result property="leaveRequestId" column="leave_request_id"/>
+        <result property="armyNumber" column="army_number"/> 
+        <result property="leaveType" column="leave_type"/> 
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="destination" column="destination"/>
+        <result property="reason" column="reason"/>
+        <result property="regDateTime" column="reg_date_time"/>
+    </resultMap>
+
+
+    <insert id="insertLeave">
+        INSERT INTO military_leave_request (
+            army_number,
+            leave_type,
+            title,
+            start_date,
+            end_date,
+            period,
+            destination,
+            reason
+        )
+        VALUES (
+            #{armyNumber},
+            #{leave.leaveType},
+            #{leave.title},
+            #{leave.startDate},
+            #{leave.endDate},
+            #{leave.period},
+            #{leave.destination},
+            #{leave.reason}
+        )
+    </insert>
+
+    <delete id="deleteLeave">
+        DELETE FROM military_leave_request WHERE leave_request_id IN
+        <foreach item="leaveId" collection="leaveIds" open="(" separator="," close=")">
+            #{leaveId}
+        </foreach>
+    </delete>
+
+    <update id="modifyLeave">
+        UPDATE military_leave_request
+        SET 
+            title = #{title},
+            start_date = #{startDate},
+            end_date = #{endDate},
+            period = #{period},
+            destination = #{destination},
+            reason = #{reason}
+        WHERE leave_request_id = #{leaveRequestId}
+    </update>
+
+
+    <select id="selectLeaveHistory" resultMap="LeaveResultMap">
+        SELECT * FROM military_leave_request
+        WHERE army_number = #{armyNumber}
+        ORDER BY reg_date_time DESC
+    </select>
+
+</mapper>

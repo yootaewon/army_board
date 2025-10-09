@@ -59,7 +59,7 @@ CREATE TABLE military_user (
 CREATE TABLE military_leave (
     leave_id BIGINT AUTO_INCREMENT PRIMARY KEY,       -- 휴가 ID
     army_number VARCHAR(20) NOT NULL,                 -- 군번
-    leave_type VARCHAR(20) NOT NULL,                  -- 휴가 종류 (포상, 위로, 연가, 징계)
+    leave_type VARCHAR(20) NOT NULL,                  -- 휴가 종류 (포상, 위로, 연가)
     leave_days INT,                                   -- 휴가 일수
     reason VARCHAR(255),                              -- 휴가 사유
     reg_date_time DATETIME DEFAULT CURRENT_TIMESTAMP, -- 등록 일시 (현재 시간)
@@ -67,4 +67,25 @@ CREATE TABLE military_leave (
 );
 
 ```
+
+### 3. 휴가 신청 관리 테이블 (`military_leave_request`)
+휴가 신청을 관리하는 테이블입니다.
+
+```sql
+CREATE TABLE military_leave_request (
+    leave_request_id BIGINT AUTO_INCREMENT PRIMARY KEY, -- 휴가 요청 ID       
+    army_number VARCHAR(20) NOT NULL,                   -- 군번
+    title  VARCHAR(20) NOT NULL,                        -- 제목
+    leave_type VARCHAR(20) NOT NULL,                    -- 휴가 종류 (포상, 위로, 연가)
+    start_date DATETIME NOT NULL,                       -- 휴가 시작일
+    end_date DATETIME NOT NULL,                         -- 휴가 복귀일
+    period VARCHAR(20) NOT NULL,                        -- 기간(1박2일)
+    destination VARCHAR(20),                            -- 행선지
+    reason VARCHAR(255),                                -- 휴가 사유
+    reg_date_time DATETIME DEFAULT CURRENT_TIMESTAMP,   -- 신청 일시 (현재 시간)
+    FOREIGN KEY (army_number) REFERENCES military_user(army_number)ON DELETE CASCADE   -- 사용자 삭제 시 휴가 신청도 함께 삭제
+);
+
+```
+
 

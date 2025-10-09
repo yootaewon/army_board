@@ -18,7 +18,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final LeaveService leaveService;
+    private final LeaveTypeService leaveService;
 
     public void signUpUser(SignUp user) {
         if (userMapper.findByArmyNumber(user.getArmyNumber()) != null) {

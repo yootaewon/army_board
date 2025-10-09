@@ -1,13 +1,5 @@
 package com.army.back.controller;
 
-import org.springframework.web.bind.annotation.RestController;
-
-import com.army.back.dto.CustomUserDetails;
-import com.army.back.dto.Leave;
-import com.army.back.dto.LeaveTypeCount;
-import com.army.back.service.LeaveTypeService;
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -15,30 +7,26 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.army.back.dto.CustomUserDetails;
+import com.army.back.dto.LeaveRequest;
+import com.army.back.service.LeaveRequestService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/leave-type")
-public class LeaveTypeController {
+@RequestMapping("/api/leave-request")
+public class LeaveRequestController {
 
-    private final LeaveTypeService leaveService;
+    private final LeaveRequestService leaveRequestService; 
 
-    @PostMapping("/select")
-    public ResponseEntity<?> selectLeaveCount(@AuthenticationPrincipal CustomUserDetails user) {
-        try {
-            LeaveTypeCount leave = leaveService.selectLeaveTypeCount(user.getArmyNumber());
-            return ResponseEntity.ok(leave);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
-        }
-    }
-    
     @PostMapping("/register")
-    public ResponseEntity<String> registerLeaveType(@RequestBody Leave leave, @AuthenticationPrincipal CustomUserDetails user) {
+    public ResponseEntity<String> registerLeave(@RequestBody LeaveRequest leave, @AuthenticationPrincipal CustomUserDetails user) {
          try {
-            leaveService.registerLeaveType(leave, user.getArmyNumber());
-            return ResponseEntity.ok("휴가가 등록되었습니다.");
+            leaveRequestService.registerLeave(leave, user.getArmyNumber());
+            return ResponseEntity.ok("휴가가 신청되었습니다.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (RuntimeException e) {
@@ -49,7 +37,7 @@ public class LeaveTypeController {
     @PostMapping("/delete")
     public ResponseEntity<String> deleteLeaveType(@RequestBody List<Long> leaveIds) {
          try {
-            leaveService.deleteLeaveType(leaveIds);
+            leaveRequestService.deleteLeave(leaveIds);
             return ResponseEntity.ok("휴가가 삭제되었습니다.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -59,9 +47,9 @@ public class LeaveTypeController {
     }
 
     @PostMapping("/modify")
-    public ResponseEntity<String> modifyLeaveType(@RequestBody Leave leave) {
+    public ResponseEntity<String> modifyLeaveType(@RequestBody LeaveRequest leave) {
           try {
-            leaveService.modifyLeaveType(leave);
+           leaveRequestService.modifyLeave(leave);
             return ResponseEntity.ok("휴가가 수정되었습니다.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -73,8 +61,8 @@ public class LeaveTypeController {
     @PostMapping("/select/history")
     public ResponseEntity<?> selectLeaveHistoryType(@AuthenticationPrincipal CustomUserDetails user) {
          try {
-            List<Leave> leaveHistory= leaveService.selectLeaveTypeHistory(user.getArmyNumber());
-            return ResponseEntity.ok(leaveHistory);
+            List<LeaveRequest> leaveRequestHistory = leaveRequestService.selectLeaveHistory(user.getArmyNumber());
+            return ResponseEntity.ok(leaveRequestHistory);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
         }

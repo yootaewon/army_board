@@ -17,8 +17,8 @@ const LeaveManageModal = ({ modalBackground, modalToggle, onUpdate }) => {
     try {
       const res = await api.post("/leave-type/select/history");
       setLeaveList(res.data);
-    } catch {
-      toast.error("휴가 리스트를 불러오는 데 실패했습니다.");
+    } catch(err) {
+      toast.error(err.response.data);
     }
   };
 
@@ -39,14 +39,29 @@ const LeaveManageModal = ({ modalBackground, modalToggle, onUpdate }) => {
       toast.info("삭제할 항목을 선택하세요.");
       return;
     }
+
+    const selectedLeaves = leaveList.filter((leave) =>
+      selectedIds.includes(leave.leaveId)
+    );
+
+    const nonDeletableTypes = ["연가"];
+
+    const hasNonDeletableLeave = selectedLeaves.some((leave) =>
+      nonDeletableTypes.includes(leave.leaveType)
+    );
+
+    if (hasNonDeletableLeave) {
+      toast.info("연가는 삭제할 수 없습니다.");
+      return;
+    }
     try {
-      await api.post("/leave-type/delete", selectedIds);
-      toast.success("선택한 휴가가 삭제되었습니다.");
+      const res = await api.post("/leave-type/delete", selectedIds);
+      toast.success(res.data);
       setSelectedIds([]);
       leaveHistoryList();
       onUpdate();
-    } catch {
-      toast.error("휴가를 삭제하는 데 실패했습니다.");
+    } catch (err) {
+      toast.error(err.response.data);
     }
   };
 
@@ -60,6 +75,15 @@ const LeaveManageModal = ({ modalBackground, modalToggle, onUpdate }) => {
       return;
     }
     const target = leaveList.find((item) => item.leaveId === selectedIds[0]);
+    if (!target) {
+      toast.error("선택한 항목을 찾을 수 없습니다.");
+      return;
+    }
+    if (target.leaveType === "연가") {
+      toast.info("연가는 수정할 수 없습니다.");
+      return;
+    }
+
     setLeaveData(target);
   };
 

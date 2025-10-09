@@ -38,12 +38,12 @@ const LeaveModifyModal = ({
     }
 
     try {
-      await api.post("/leave-type/modify", form);
-      toast.success("휴가가 수정되었습니다.");
+      const res = await api.post("/leave-type/modify", form);
+      toast.success(res.data);
       modalToggle();
       onUpdate();
-    } catch {
-      toast.error("휴가 수정에 실패했습니다.");
+    } catch(err) {
+      toast.error(err.response.data);
     }
   };
 

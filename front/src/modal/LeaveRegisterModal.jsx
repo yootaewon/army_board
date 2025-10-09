@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 const LeaveRegisterModal = ({ modalBackground, modalToggle, onUpdate }) => {
   const [form, setForm] = useState({
-    leaveType: "연가",
+    leaveType: "포상",
     leaveDays: 0,
     reason: "",
   });
@@ -28,12 +28,12 @@ const LeaveRegisterModal = ({ modalBackground, modalToggle, onUpdate }) => {
     }
 
     try {
-      await api.post("/leave-type/register", form);
-      toast.success("휴가가 등록되었습니다.");
+      const res = await api.post("/leave-type/register", form);
+      toast.success(res.data);
       modalToggle();
       onUpdate();
-    } catch {
-      toast.error("휴가 등록에 실패했습니다.");
+    } catch(err) {
+      toast.error(err.response.data);
     }
   };
 
@@ -60,10 +60,8 @@ const LeaveRegisterModal = ({ modalBackground, modalToggle, onUpdate }) => {
                 value={form.leaveType}
                 onChange={handleChange}
               >
-                <option value="연가">연가</option>
                 <option value="포상">포상</option>
                 <option value="위로">위로</option>
-                <option value="징계">징계</option>
               </select>
             </div>
             <div className="mb-3">

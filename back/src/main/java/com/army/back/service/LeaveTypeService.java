@@ -9,14 +9,14 @@ import com.army.back.dto.Leave;
 import com.army.back.dto.LeaveTypeCount;
 import com.army.back.dto.SignUp;
 import com.army.back.enums.ArmyType;
-import com.army.back.mapper.LeaveMapper;
+import com.army.back.mapper.LeaveTypeMapper;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class LeaveService {
+public class LeaveTypeService {
 
-    private final LeaveMapper leaveMapper;
+    private final LeaveTypeMapper leaveTypeMapper;
 
     public void registerAnnualLeave(SignUp user, ArmyType armyType) {
         Leave leave = Leave.builder()
@@ -25,15 +25,18 @@ public class LeaveService {
             .reason("기본 연가")
             .build();
         try {
-            leaveMapper.insertLeave(leave, user.getArmyNumber());
+            leaveTypeMapper.insertLeave(leave, user.getArmyNumber());
         } catch (DataAccessException e) {
             throw new RuntimeException("연가 등록 중 오류가 발생했습니다.", e);
         }
     }
 
     public void registerLeaveType(Leave leave, String armyNumber) {
+        if ("연가".equals(leave.getLeaveType())) {
+            throw new IllegalArgumentException("연가는 등록할 수 없습니다.");
+        }
         try {
-            leaveMapper.insertLeave(leave, armyNumber);
+            leaveTypeMapper.insertLeave(leave, armyNumber);
         } catch (DataAccessException e) {
             throw new RuntimeException("휴가 등록 중 오류가 발생했습니다.", e);
         }
@@ -41,15 +44,23 @@ public class LeaveService {
 
     public void deleteLeaveType(List<Long> leaveIds) {
         try {
-            leaveMapper.deleteLeave(leaveIds);
+            List<Leave> leavesToDelete = leaveTypeMapper.selectLeavesByIds(leaveIds);
+            boolean hasAnnualLeave = leavesToDelete.stream().anyMatch(leave -> "연가".equals(leave.getLeaveType()));
+        if (hasAnnualLeave) {
+            throw new IllegalArgumentException("연가는 삭제할 수 없습니다.");
+        }
+            leaveTypeMapper.deleteLeave(leaveIds);
         } catch (DataAccessException e) {
             throw new RuntimeException("휴가 삭제 중 오류가 발생했습니다.", e);
         }
     }
 
     public void modifyLeaveType(Leave leave) {
+        if ("연가".equals(leave.getLeaveType())) {
+            throw new IllegalArgumentException("연가는 수정할 수 없습니다.");
+        }
         try {
-            leaveMapper.modifyLeave(leave);
+            leaveTypeMapper.modifyLeave(leave);
         } catch (DataAccessException e) {
             throw new RuntimeException("휴가 수정 중 오류가 발생했습니다.", e);
         }
@@ -57,7 +68,7 @@ public class LeaveService {
 
     public List<Leave> selectLeaveTypeHistory(String armyNumber) {
         try {
-            List<Leave> historyList = leaveMapper.selectLeaveHistory(armyNumber);
+            List<Leave> historyList = leaveTypeMapper.selectLeaveHistory(armyNumber);
             return historyList;
         } catch (DataAccessException e) {
             throw new RuntimeException("휴가 기록 조회 중 오류가 발생했습니다.", e);
@@ -66,7 +77,7 @@ public class LeaveService {
 
     public LeaveTypeCount selectLeaveTypeCount(String armyNumber) {
         try {
-            return leaveMapper.selectLeaveTypeCount(armyNumber);
+            return leaveTypeMapper.selectLeaveTypeCount(armyNumber);
         } catch (DataAccessException e) {
             throw new RuntimeException("휴가 통계 조회 중 오류가 발생했습니다.", e);
         }

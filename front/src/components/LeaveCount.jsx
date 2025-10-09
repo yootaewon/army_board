@@ -9,7 +9,6 @@ const LeaveCount = () => {
   const [annual, setAnnual] = useState(0);
   const [reward, setReward] = useState(0);
   const [comfort, setComfort] = useState(0);
-  const [discipline, setDiscipline] = useState(0);
   const [manageModalOpen, setManageModalOpen] = useState(false);
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
 
@@ -27,9 +26,8 @@ const LeaveCount = () => {
       setAnnual(data.annual);
       setReward(data.reward);
       setComfort(data.comfort);
-      setDiscipline(data.discipline);
     } catch (err) {
-      toast.error("휴가 통계를 불러오는 데 실패했습니다.");
+      toast.error(err.response.data);
     }
   };
 
@@ -44,17 +42,14 @@ const LeaveCount = () => {
         </div>
 
         <div className="row text-center">
-          <div className="col-md-3 pb-2">
+          <div className="col-md-4 pb-2">
             <label className="form-label">연가: {annual}</label>
           </div>
-          <div className="col-md-3 pb-2">
+          <div className="col-md-4 pb-2">
             <label className="form-label">포상: {reward}</label>
           </div>
-          <div className="col-md-3 pb-2">
+          <div className="col-md-4 pb-2">
             <label className="form-label">위로: {comfort}</label>
-          </div>
-          <div className="col-md-3 pb-2">
-            <label className="form-label">징계: {discipline}</label>
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.army.back.mapper.LeaveMapper">
+<mapper namespace="com.army.back.mapper.LeaveTypeMapper">
 
     <resultMap id="LeaveResultMap" type="com.army.back.dto.Leave">
         <result property="leaveId" column="leave_id"/>
@@ -9,7 +9,6 @@
         <result property="reason" column="reason"/>
         <result property="regDateTime" column="reg_date_time"/>
     </resultMap>
-
 
     <insert id="insertLeave">
         INSERT INTO military_leave (army_number, leave_type, leave_days, reason)
@@ -23,14 +22,16 @@
 
     <delete id="deleteLeave">
         DELETE FROM military_leave WHERE leave_id IN
-    <foreach item="leaveId" collection="leaveIds" open="(" separator="," close=")">
-        #{leaveId}
-    </foreach>
+        <foreach item="leaveId" collection="leaveIds" open="(" separator="," close=")">
+            #{leaveId}
+        </foreach>
     </delete>
 
     <update id="modifyLeave">
-        UPDATE military_leave 
-        SET leave_type = #{leaveType}, leave_days = #{leaveDays}, reason = #{reason}
+        UPDATE military_leave
+        SET leave_type = #{leaveType},
+            leave_days = #{leaveDays},
+            reason = #{reason}
         WHERE leave_id = #{leaveId}
     </update>
 
@@ -38,15 +39,23 @@
         SELECT
             COALESCE(SUM(CASE WHEN leave_type = '위로' THEN leave_days ELSE 0 END), 0) AS comfort,
             COALESCE(SUM(CASE WHEN leave_type = '포상' THEN leave_days ELSE 0 END), 0) AS reward,
-            COALESCE(SUM(CASE WHEN leave_type = '연가' THEN leave_days ELSE 0 END), 0) AS annual,
-            COALESCE(SUM(CASE WHEN leave_type = '징계' THEN leave_days ELSE 0 END), 0) AS discipline
+            COALESCE(SUM(CASE WHEN leave_type = '연가' THEN leave_days ELSE 0 END), 0) AS annual
         FROM military_leave
         WHERE army_number = #{armyNumber}
     </select>
 
-
     <select id="selectLeaveHistory" resultMap="LeaveResultMap">
-        SELECT * FROM military_leave WHERE army_number = #{armyNumber} ORDER BY reg_date_time DESC
+        SELECT * FROM military_leave
+        WHERE army_number = #{armyNumber}
+        ORDER BY reg_date_time DESC
+    </select>
+
+    <select id="selectLeavesByIds" resultType="com.army.back.dto.Leave">
+        SELECT * FROM military_leave
+        WHERE leave_id IN
+        <foreach item="id" collection="leaveIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </select>
 
 </mapper>
