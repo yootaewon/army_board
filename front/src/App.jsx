@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import store from "./redux/userStore";
 import AuthCheck from "./router/AuthCheck";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./style/App.css";
 import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useDispatch, Provider } from "react-redux";
@@ -22,14 +23,16 @@ function App() {
     <Provider store={store}>
       <BrowserRouter>
         <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/signIn" element={<SignIn />} />
-          <Route path="/signUp" element={<SignUp />} />
-          <Route element={<AuthCheck />}>
-            <Route path="/leave" element={<Leave />} />
-          </Route>
-        </Routes>
+        <div className="body-container">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signIn" element={<SignIn />} />
+            <Route path="/signUp" element={<SignUp />} />
+            <Route element={<AuthCheck />}>
+              <Route path="/leave" element={<Leave />} />
+            </Route>
+          </Routes>
+        </div>
       </BrowserRouter>
     </Provider>
   );

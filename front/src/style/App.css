@@ -1,0 +1,30 @@
+/* 전체 페이지의 레이아웃을 설정 */
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+}
+
+body-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header 영역 고정 */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  z-index: 1000; /* 헤더가 다른 콘텐츠 위에 표시되도록 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 본문 영역의 여백을 확보 */
+.body-container {
+  margin-top: 60px; /* 헤더 높이에 맞게 여백을 추가 */
+  flex: 1;
+  padding: 20px;
+  background-color: #f4f4f9;
+}

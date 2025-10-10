@@ -1,6 +1,7 @@
 package com.army.back.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,5 +20,5 @@ public class LeaveRequest {
     private String period;
     private String destination;
     private String reason;
-    private LocalDate regDateTime;
+    private LocalDateTime regDateTime;
 }
