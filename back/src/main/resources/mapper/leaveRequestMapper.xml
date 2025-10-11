@@ -61,6 +61,11 @@
         SELECT * FROM military_leave_request
         WHERE army_number = #{armyNumber}
         ORDER BY reg_date_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countLeaveHistory" resultType="int">
+        SELECT COUNT(*) FROM military_leave_request WHERE #{armyNumber}
     </select>
 
 </mapper>

@@ -32,7 +32,7 @@ const LeaveRegisterModal = ({ modalBackground, modalToggle, onUpdate }) => {
       toast.success(res.data);
       modalToggle();
       onUpdate();
-    } catch(err) {
+    } catch (err) {
       toast.error(err.response.data);
     }
   };
@@ -48,9 +48,7 @@ const LeaveRegisterModal = ({ modalBackground, modalToggle, onUpdate }) => {
     >
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
         <div className="modal-content">
-          <header className="modal-header">
-            <h5 className="modal-title">등록</h5>
-          </header>
+          <h5 className="modal-title">등록</h5>
           <section className="modal-body">
             <div className="mb-3">
               <label className="form-label">유형</label>

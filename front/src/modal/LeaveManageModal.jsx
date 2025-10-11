@@ -17,7 +17,7 @@ const LeaveManageModal = ({ modalBackground, modalToggle, onUpdate }) => {
     try {
       const res = await api.post("/leave-type/select/history");
       setLeaveList(res.data);
-    } catch(err) {
+    } catch (err) {
       toast.error(err.response.data);
     }
   };
@@ -104,14 +104,7 @@ const LeaveManageModal = ({ modalBackground, modalToggle, onUpdate }) => {
       >
         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
           <div className="modal-content">
-            <header className="modal-header">
-              <h5 className="modal-title">등록 내역</h5>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={modalToggle}
-              />
-            </header>
+            <h5 className="modal-title">등록 내역</h5>
             <section className="modal-body">
               {leaveList.length === 0 ? (
                 <p className="text-center my-3">등록된 내역이 없습니다.</p>

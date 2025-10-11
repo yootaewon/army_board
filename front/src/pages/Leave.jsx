@@ -3,20 +3,28 @@ import LeaveType from "../components/LeaveCount";
 import Table from "../components/Table";
 import { toast, ToastContainer } from "react-toastify";
 import api from "../api/AxiosInstance";
+import Pagination from "../components/Pagenation";
+
 const Leave = () => {
   const [items, setItems] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [size, setSize] = useState(5);
 
   useEffect(() => {
-    const fetchDates = async () => {
+    const fetchData = async () => {
       try {
-        const res = await api.post("/leave-request/select/history");
-        setItems(res.data);
+        const res = await api.post(
+          `/leave-request/select/history?page=${currentPage}&size=${size}`
+        );
+        setItems(res.data.content);
+        setTotalPages(res.data.totalPages);
       } catch (err) {
-        toast.error(err.reponse.data);
+        toast.error(err.response.data);
       }
     };
-    fetchDates();
-  }, []);
+    fetchData();
+  }, [currentPage, size]);
 
   const headers = [
     { text: "제목", value: "title" },
@@ -34,7 +42,15 @@ const Leave = () => {
       <ToastContainer />
       <div className="container d-flex flex-column justify-content-center align-items-center min-vh-70">
         <LeaveType toast={toast} />
-        <Table headers={headers} items={items} />
+        <Table
+          headers={headers}
+          items={items}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          size={size}
+          setSize={setSize}
+        />
       </div>
     </>
   );

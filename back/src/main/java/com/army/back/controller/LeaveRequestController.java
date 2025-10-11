@@ -7,13 +7,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.army.back.dto.CustomUserDetails;
 import com.army.back.dto.LeaveRequest;
+import com.army.back.dto.PagenationResponse;
 import com.army.back.service.LeaveRequestService;
 
 import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -58,13 +61,20 @@ public class LeaveRequestController {
         }
     }
 
+
     @PostMapping("/select/history")
-    public ResponseEntity<?> selectLeaveHistoryType(@AuthenticationPrincipal CustomUserDetails user) {
-         try {
-            List<LeaveRequest> leaveRequestHistory = leaveRequestService.selectLeaveHistory(user.getArmyNumber());
-            return ResponseEntity.ok(leaveRequestHistory);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
-        }
+    public ResponseEntity<?> selectLeaveHistoryType(@AuthenticationPrincipal CustomUserDetails user, @RequestParam(name = "page")int page, @RequestParam(name = "size")int size) {
+     try {
+        List<LeaveRequest> leaveRequestHistory = leaveRequestService.selectLeaveHistory(user.getArmyNumber(), page, size);
+
+        int totalRecords = leaveRequestService.countLeaveHistory(user.getArmyNumber());
+        int totalPages = (int) Math.ceil((double) totalRecords / size);  
+        PagenationResponse<LeaveRequest> response = new PagenationResponse<>(leaveRequestHistory, totalPages, totalRecords);
+        return ResponseEntity.ok(response);
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
     }
+}
+
+
 }

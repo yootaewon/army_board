@@ -22,6 +22,7 @@ public class LeaveRequestService {
             throw new RuntimeException("휴가 신청 중 오류가 발생했습니다.", e);
         }
     }
+
     public void modifyLeave(LeaveRequest leave){  
         try {
             leaveRequestMapper.modifyLeave(leave);
@@ -29,6 +30,7 @@ public class LeaveRequestService {
             throw new RuntimeException("휴가 수정 중 오류가 발생했습니다.", e);
         }
     }
+
     public void deleteLeave(List<Long> leaveIds){
         try {
             leaveRequestMapper.deleteLeave(leaveIds);
@@ -36,11 +38,17 @@ public class LeaveRequestService {
             throw new RuntimeException("휴가 삭제 중 오류가 발생했습니다.", e);
         }
     }
-    public List<LeaveRequest> selectLeaveHistory(String armyNumber){
+
+    public List<LeaveRequest> selectLeaveHistory(String armyNumber, int page, int size){
         try {
-            return leaveRequestMapper.selectLeaveHistory(armyNumber);
+            int offset = (page - 1) * size;
+            return leaveRequestMapper.selectLeaveHistory(armyNumber, offset, size);
         } catch (Exception e) {
             throw new RuntimeException("휴가 신청 조회 중 오류가 발생했습니다.", e);
         }
+    }
+    
+    public int countLeaveHistory(String armyNumber){
+        return leaveRequestMapper.countLeaveHistory(armyNumber);
     }
 }

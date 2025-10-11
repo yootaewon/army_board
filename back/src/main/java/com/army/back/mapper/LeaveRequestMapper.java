@@ -16,6 +16,10 @@ public interface LeaveRequestMapper {
 
     void modifyLeave(LeaveRequest leave);
 
-    List<LeaveRequest> selectLeaveHistory(String armyNumber);
+    List<LeaveRequest> selectLeaveHistory(@Param("armyNumber") String armyNumber, 
+                                          @Param("offset") int offset, 
+                                          @Param("limit") int limit);
+
+    int countLeaveHistory(String armyNumber);
     
 } 
